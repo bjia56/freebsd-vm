@@ -275,7 +275,7 @@ EOF
 
 }
 
-export VM_NFS_CMD="echo 'nfsuserd_enable="YES"' >> /etc/rc.conf && echo 'nfsuserd_flags="-domain srv.world"' >> /etc/rc.conf && mount -t nfs -o nfsv4 192.168.122.1:$HOME/work $HOME/work/"
+export VM_NFS_CMD="echo 'nfsuserd_enable=\"YES\"' >> /etc/rc.conf && echo 'nfsuserd_flags=\"-domain srv.world\"' >> /etc/rc.conf && mount -t nfs -o nfsv4 192.168.122.1:$HOME/work $HOME/work/"
 
 setupNFSShare() {
   if [ "$VM_NFS_CMD" ]; then

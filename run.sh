@@ -275,20 +275,21 @@ EOF
 
 }
 
+export VM_NFS_CMD="echo 'nfsuserd_enable="YES"' >> /etc/rc.conf && echo 'nfsuserd_flags="-domain srv.world"' >> /etc/rc.conf && mount -t nfs -o nfsv4 192.168.122.1:$HOME/work $HOME/work/"
+
 setupNFSShare() {
-  sudo apt-get install -y nfs-kernel-server
-  echo "$HOME/work *(rw,async,no_subtree_check,anonuid=$(id -u),anongid=$(id -g))" | sudo tee -a /etc/exports
-  sudo exportfs -a
+  if [ "$VM_NFS_CMD" ]; then
+    echo "Installing NFS on host"
+    sudo apt-get install -y nfs-kernel-server
+    echo "$HOME/work *(rw,async,no_subtree_check,anonuid=$(id -u),anongid=$(id -g))" | sudo tee -a /etc/exports
+    sudo exportfs -a
 
-  echo "Configuring NFS"
-
-  ssh "$osname" sh <<EOF
-echo 'nfsuserd_enable="YES"' >> /etc/rc.conf
-echo 'nfsuserd_flags="-domain srv.world"' >> /etc/rc.conf
-mount -t nfs -o nfsv4 192.168.122.1:$HOME/work $HOME/work/
+    echo "Configuring NFS in VM"
+    ssh "$osname" sh <<EOF
+$VM_NFS_CMD
 EOF
-
-  echo "Done configuring NFS"
+    echo "Done with NFS"
+  fi
 }
 
 
